@@ -1,51 +1,33 @@
-/* eslint-disable func-names */
 const mongoose = require('mongoose');
-const Joi = require('joi');
 
-const courseSchema = new mongoose.Schema(
+const schema = new mongoose.Schema(
   {
     _id: {
       type: String,
       uppercase: true,
-      alias: 'code'
+      alias: 'code' // virtual `code` property
     },
     name: {
       type: String,
-      required: true,
-      trim: true,
-      minlength: 2
+      required: true
     },
     description: {
       type: String,
       default: ''
     },
-    image: {
-      type: String,
-      validate: {
-        validator: url => !Joi.validate(url, Joi.string().uri()).error,
-        msg: 'Invalid url format'
-      }
-    },
-    __v: { type: Number, select: false }
+    students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+    __v: { type: Number, select: false }, // hide version
+    createdAt: { type: Date, select: false }
   },
   {
-    timestamps: true,
-    toObject: {
-      virtuals: true
-    },
+    timestamps: true, // show timestamp
     toJSON: {
-      virtuals: true
+      virtuals: true // required to show 'code' property
     },
-    id: false
+    id: false // hide `id` virtual property
   }
 );
 
-courseSchema.statics.searchQuery = async function(pagination, sort, search) {
-  const { page, pageSize } = pagination;
-  return this.find({ _id: { $regex: search, $options: 'i' } })
-    .sort(sort)
-    .skip((page - 1) * pageSize)
-    .limit(pageSize);
-};
+const model = mongoose.model('Course', schema);
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = model;

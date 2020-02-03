@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = id => {
+function generateToken(id) {
   const token = jwt.sign({ id }, process.env.JWT_KEY, {
-    expiresIn: '15m'
+    expiresIn: '1h'
   });
   return token;
-};
+}
 
-const validateToken = token => {
+function validateToken(token) {
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -15,6 +15,6 @@ const validateToken = token => {
     return null;
   }
   return decoded;
-};
+}
 
 module.exports = { generateToken, validateToken };

@@ -1,76 +1,76 @@
-const courseService = require('../services/course');
-// const studentService = require('../services/student');
-// const teacherService = require('../services/teacher');
-
-const {
-  convertUpdateBody,
-  convertQuery,
-  formatResponse
-} = require('../utils/helper');
-
-async function getAllCourses(req, res) {
-  const total = await courseService.countAll();
-  const { pagination, sort, search } = convertQuery(req.query, total);
-
-  const courses = await courseService.getAll(pagination, sort, search);
-
-  return formatResponse(res, { data: courses, pagination });
-}
-
-async function getCourse(req, res) {
-  const { code } = req.params;
-  const course = await courseService.getOneWithPopulate(code, {
-    teachers: 'firstName lastName',
-    students: 'firstName lastName'
-  });
-  if (!course) {
-    return formatResponse(res, 'Course not found', 404);
-  }
-
-  return formatResponse(res, course);
-}
+const Course = require('../models/course');
+const Student = require('../models/student');
 
 async function addCourse(req, res) {
   const { name, code, description } = req.body;
-  const course = await courseService.createOne({
+
+  const course = new Course({
     name,
-    description,
-    _id: code
+    code,
+    description
   });
-  return formatResponse(res, course, 201);
+  await course.save();
+  return res.json(course);
+}
+
+async function getCourse(req, res) {
+  const { id: code } = req.params;
+
+  const course = await Course.findById(code).populate(
+    'students',
+    'firstName lastName'
+  );
+
+  if (!course) {
+    return res.status(404).json('course not found');
+  }
+  return res.json(course);
+}
+
+async function getAllCourses(req, res) {
+  const courses = await Course.find();
+  return res.json(courses);
 }
 
 async function updateCourse(req, res) {
-  const { code } = req.params;
-  const keys = ['name', 'description'];
-  const course = await courseService.updateOne(
+  const { id: code } = req.params;
+  const { name, description } = req.body;
+  const newCourse = await Course.findByIdAndUpdate(
     code,
-    convertUpdateBody(req.body, keys)
+    { name, description },
+    {
+      new: true // return the updated object
+      // runValidators: true // run validator against new value
+    }
   );
-  if (!course) {
-    return formatResponse(res, 'Course not found', 404);
+  if (!newCourse) {
+    return res.status(404).json('course not found');
   }
-
-  return formatResponse(res, course);
+  return res.json(newCourse);
 }
 
 async function deleteCourse(req, res) {
-  const { code } = req.params;
-  const course = await courseService.deleteOne(code);
+  const { id: code } = req.params;
+  const course = await Course.findByIdAndDelete(code);
   if (!course) {
-    return formatResponse(res, 'Course not found', 404);
+    return res.status(404).json('course not found');
   }
-
-  // clean the refs
-  // await studentService.removeCourseRefs(course._id);
-  // await teacherService.removeCourseRefs(course._id);
-
-  return formatResponse(res, course);
+  await Student.updateMany(
+    {
+      _id: { $in: course.students }
+    },
+    {
+      $pull: {
+        courses: course._id
+      }
+    }
+  );
+  return res.sendStatus(200);
 }
 
 module.exports = {
-  getAllCourses,
   addCourse,
+  getAllCourses,
   getCourse,
   updateCourse,
   deleteCourse

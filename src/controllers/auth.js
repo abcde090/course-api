@@ -1,14 +1,22 @@
-const userService = require('../services/user');
-const { formatResponse } = require('../utils/helper');
+const User = require('../models/user');
 const { generateToken } = require('../utils/jwt');
 
-module.exports = {
-  login: async (req, res) => {
-    const { email, password } = req.body;
-    const user = await userService.validateUser(email, password);
-    if (!user) return formatResponse(res, 'Invalid email or password.', 401);
+async function loginUser(req, res) {
+  const { username, password } = req.body;
 
-    const token = generateToken(user._id);
-    return formatResponse(res, { name: user.name, token });
+  const existingUser = await User.findOne({ username }).exec();
+  if (!existingUser) {
+    return res.status(401).json('Invalid username or password');
   }
+  const validPassword = await existingUser.validatePassword(password);
+  if (!validPassword) {
+    return res.status(401).json('Invalid username or password');
+  }
+
+  const token = generateToken(existingUser._id);
+  return res.json({ username, token });
+}
+
+module.exports = {
+  loginUser
 };
