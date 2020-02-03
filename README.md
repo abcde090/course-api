@@ -1,5 +1,5 @@
-# Dan's online course management system
-An online course management system, made from Node, MongoDB, Express and REST APIs.
+# Dan's course management system
+A course management system, made from Node, MongoDB, Express and REST APIs.
 
 deployed on heroku: 
 https://dan-course-management-system.herokuapp.com/
