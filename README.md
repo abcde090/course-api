@@ -1,9 +1,12 @@
 # Dan's online course management system
 An online course management system, made from Node, MongoDB, Express and REST APIs.
-deployed on heroku: https://staff-seating-management.herokuapp.com/
+
+deployed on heroku: 
+https://dan-course-management-system.herokuapp.com/
 
 
 check swagger for references: 
+https://dan-course-management-system.herokuapp.com/api-docs/
 
 ## Getting Started
 Install dependencies
