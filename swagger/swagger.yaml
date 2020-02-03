@@ -71,7 +71,7 @@ paths:
           description: 'successful'
         400:
           description: 'Invalid username or password'
-# --------------------------------- course start -------------------------- #
+# --------------------------------- students start -------------------------- #
   /courses:
     get:
       tags:
@@ -219,11 +219,9 @@ components:
     User:
       type: 'object'
       properties:
-        email:
-          type: 'string'
         password:
           type: 'string'
-        name:
+        username:
           type: 'string'
           description: 'display name'
     Student:
