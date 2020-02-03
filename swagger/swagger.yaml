@@ -16,6 +16,8 @@ tags:
     description: "User authentication"
   - name: "courses"
     description: "Operations about courses"
+  - name: "students"
+    description: "Operations about students"
 
 paths:
   /users:
