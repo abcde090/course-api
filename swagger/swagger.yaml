@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Course management system
+  title: Dan's Course management system
   description: This is the api server for a course management system
   contact:
     name: Dan Wang
