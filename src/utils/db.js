@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 
 exports.connectToDB = () => {
-  const { MONGODB_URL } = process.env;
+  const {DB_HOST,DB_PORT,DB_DATABASE} =process.env;
+  const connectionString =`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
   // mongoose.set('debug', true);
-  const connectionString = `mongodb://${MONGODB_URL}`;
-
   console.log(`Connecting to ${connectionString}`);
   mongoose.set('useFindAndModify', false);
-  return mongoose.connect(connectionString, {
+  return mongoose.connect(process.env.MONGODB_URI || connectionString, {
     useNewUrlParser: true,
     useCreateIndex: true
   });
