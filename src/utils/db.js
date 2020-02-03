@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 exports.connectToDB = () => {
-  const { DB_HOST, DB_PORT, DB_DATABASE } = process.env;
+  const { MONGODB_URL } = process.env;
   // mongoose.set('debug', true);
-  const connectionString = `mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
+  const connectionString = `mongodb://${MONGODB_URL}`;
 
   console.log(`Connecting to ${connectionString}`);
   mongoose.set('useFindAndModify', false);
