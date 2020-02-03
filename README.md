@@ -1,6 +1,8 @@
 # course-api
 An online course management system, made from Node, MongoDB, Express and REST APIs.
 deployed on heroku: https://staff-seating-management.herokuapp.com/
+
+
 check swagger for references: 
 
 ## Getting Started
