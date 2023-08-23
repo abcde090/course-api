@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2.1.1
+        uses: peter-evans/repository-dispatch@v2
         with:
+          token: ${{ secrets.PAT }}
+          repository: abcde090/leaveList
           event-type: my-event
+
+          
