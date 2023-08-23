@@ -1,10 +1,5 @@
 name: Terraform Plan
 
-permissions:
-  contents: 'read'
-  id-token: 'write'
-  pull-requests: 'write'
-
 on:
   push
 
